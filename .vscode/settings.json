@@ -26,8 +26,8 @@
   },
   "typescript.tsdk": "node_modules/typescript/lib",
   "files.exclude": {
-    "**/.vscode": true,
-    "**/node_modules": true,
+    // "**/.vscode": false,
+    "**/node_modules": false,
     "**/.next": true,
     "next-env.d.ts": true
   }
