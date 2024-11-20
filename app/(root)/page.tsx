@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import QuestionCard from '@/components/cards/QuestionCard';
 import HomeFilter from '@/components/filters/HomeFilter';
 import LocalSearch from '@/components/search/LocalSearch';
 import { Button } from '@/components/ui/button';
@@ -15,7 +16,12 @@ const questions = [
       { _id: '1', name: 'react' },
       { _id: '2', name: 'javascript' },
     ],
-    author: { _id: '1', name: 'John Doe' },
+    author: {
+      _id: '1',
+      name: 'John Doe',
+      image:
+        'https://img.freepik.com/premium-photo/web-developer-digital-avatar-generative-ai_934475-9048.jpg',
+    },
     upvotes: 10,
     answers: 5,
     views: 100,
@@ -30,7 +36,12 @@ const questions = [
       { _id: '3', name: 'nodejs' },
       { _id: '2', name: 'javascript' },
     ],
-    author: { _id: '2', name: 'Jane Smith' },
+    author: {
+      _id: '2',
+      name: 'Jane Smith',
+      image:
+        'https://img.freepik.com/premium-photo/web-developer-digital-avatar-generative-ai_934475-9048.jpg',
+    },
     upvotes: 25,
     answers: 7,
     views: 230,
@@ -45,7 +56,12 @@ const questions = [
       { _id: '2', name: 'javascript' },
       { _id: '4', name: 'async-await' },
     ],
-    author: { _id: '3', name: 'Alice Johnson' },
+    author: {
+      _id: '3',
+      name: 'Alice Johnson',
+      image:
+        'https://img.freepik.com/premium-photo/web-developer-digital-avatar-generative-ai_934475-9048.jpg',
+    },
     upvotes: 45,
     answers: 9,
     views: 500,
@@ -62,7 +78,12 @@ const questions = [
       { _id: '6', name: 'nosql' },
       { _id: '7', name: 'databases' },
     ],
-    author: { _id: '4', name: 'Bob Brown' },
+    author: {
+      _id: '4',
+      name: 'Bob Brown',
+      image:
+        'https://img.freepik.com/premium-photo/web-developer-digital-avatar-generative-ai_934475-9048.jpg',
+    },
     upvotes: 15,
     answers: 4,
     views: 150,
@@ -78,7 +99,12 @@ const questions = [
       { _id: '9', name: 'deployment' },
       { _id: '10', name: 'cloud' },
     ],
-    author: { _id: '5', name: 'Charlie Kim' },
+    author: {
+      _id: '5',
+      name: 'Charlie Kim',
+      image:
+        'https://img.freepik.com/premium-photo/web-developer-digital-avatar-generative-ai_934475-9048.jpg',
+    },
     upvotes: 30,
     answers: 6,
     views: 400,
@@ -94,7 +120,12 @@ const questions = [
       { _id: '11', name: 'css' },
       { _id: '12', name: 'performance' },
     ],
-    author: { _id: '6', name: 'Dana Lee' },
+    author: {
+      _id: '6',
+      name: 'Dana Lee',
+      image:
+        'https://img.freepik.com/premium-photo/web-developer-digital-avatar-generative-ai_934475-9048.jpg',
+    },
     upvotes: 12,
     answers: 3,
     views: 180,
@@ -111,7 +142,12 @@ const questions = [
       { _id: '13', name: 'express' },
       { _id: '14', name: 'rest-api' },
     ],
-    author: { _id: '7', name: 'Eli Wang' },
+    author: {
+      _id: '7',
+      name: 'Eli Wang',
+      image:
+        'https://img.freepik.com/premium-photo/web-developer-digital-avatar-generative-ai_934475-9048.jpg',
+    },
     upvotes: 20,
     answers: 8,
     views: 320,
@@ -128,7 +164,12 @@ const questions = [
       { _id: '2', name: 'javascript' },
       { _id: '16', name: 'learning' },
     ],
-    author: { _id: '8', name: 'Fiona Patel' },
+    author: {
+      _id: '8',
+      name: 'Fiona Patel',
+      image:
+        'https://img.freepik.com/premium-photo/web-developer-digital-avatar-generative-ai_934475-9048.jpg',
+    },
     upvotes: 55,
     answers: 12,
     views: 610,
@@ -144,12 +185,17 @@ const questions = [
       { _id: '2', name: 'javascript' },
       { _id: '17', name: 'event-loop' },
     ],
-    author: { _id: '9', name: 'George Silva' },
+    author: {
+      _id: '9',
+      name: 'George Silva',
+      image:
+        'https://img.freepik.com/premium-photo/web-developer-digital-avatar-generative-ai_934475-9048.jpg',
+    },
     upvotes: 40,
     answers: 11,
     views: 450,
-    createdAt: new Date('2023-07-05T12:00:00'),
-    updatedAt: new Date('2023-07-15T12:00:00'),
+    createdAt: new Date('2024-07-05T12:00:00'),
+    updatedAt: new Date('2024-07-15T12:00:00'),
   },
   {
     _id: '10',
@@ -160,7 +206,12 @@ const questions = [
       { _id: '1', name: 'react' },
       { _id: '18', name: 'hooks' },
     ],
-    author: { _id: '10', name: 'Helen Grant' },
+    author: {
+      _id: '10',
+      name: 'Helen Grant',
+      image:
+        'https://img.freepik.com/premium-photo/web-developer-digital-avatar-generative-ai_934475-9048.jpg',
+    },
     upvotes: 22,
     answers: 6,
     views: 370,
@@ -210,7 +261,7 @@ const Home = async ({ searchParams }: LocalSearchParams) => {
       <HomeFilter />
       <div className="mt-10 flex w-full flex-col gap-6">
         {filteredQuestions.map((question) => (
-          <h1 key={question._id}>{question.title}</h1>
+          <QuestionCard key={question._id} question={question} />
         ))}
       </div>
     </>
