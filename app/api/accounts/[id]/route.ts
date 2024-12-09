@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 
 import Account from '@/database/account.model';
-import User from '@/database/user.model';
 import handleError from '@/lib/handlers/error';
 import { NotFoundError, ValidationError } from '@/lib/http-errors';
 import dbConnect from '@/lib/mongoose';
@@ -51,7 +50,7 @@ export async function PUT(
       throw new ValidationError(validateData.error.flatten().fieldErrors);
     }
 
-    const updatedAccount = await User.findByIdAndUpdate(id, validateData, {
+    const updatedAccount = await Account.findByIdAndUpdate(id, validateData, {
       new: true,
     });
 
@@ -80,7 +79,7 @@ export async function DELETE(
 
   try {
     await dbConnect();
-    const account = await User.findByIdAndDelete(id);
+    const account = await Account.findByIdAndDelete(id);
     if (!account) {
       throw new NotFoundError('Account not found');
     }
