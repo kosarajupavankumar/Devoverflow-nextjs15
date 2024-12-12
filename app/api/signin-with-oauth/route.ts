@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { NextResponse } from 'next/server';
 import slugify from 'slugify';
 
 import Account from '@/database/account.model';
@@ -15,9 +16,10 @@ export async function POST(request: Request) {
   await dbConnect();
 
   const session = await mongoose.startSession();
+  session.startTransaction();
 
   try {
-    const validatedData = await SignInWithOAuthSchema.safeParse({
+    const validatedData = SignInWithOAuthSchema.safeParse({
       provider,
       providerAccountId,
       user,
@@ -28,7 +30,7 @@ export async function POST(request: Request) {
 
     const { name, username, email, image } = user;
 
-    const sluggedUsername = slugify(username, {
+    const slugifiedUsername = slugify(username, {
       lower: true,
       strict: true,
       trim: true,
@@ -38,13 +40,13 @@ export async function POST(request: Request) {
 
     if (!existingUser) {
       [existingUser] = await User.create(
-        [{ name, username: sluggedUsername, email, image }],
-        session,
+        [{ name, username: slugifiedUsername, email, image }],
+        { session },
       );
     } else {
       const updatedData: { name?: string; image?: string } = {};
 
-      if (existingUser.name !== image) updatedData.name = name;
+      if (existingUser.name !== name) updatedData.name = name;
       if (existingUser.image !== image) updatedData.image = image;
 
       if (Object.keys(updatedData).length > 0) {
@@ -77,6 +79,8 @@ export async function POST(request: Request) {
     }
 
     await session.commitTransaction();
+
+    return NextResponse.json({ success: true });
   } catch (error: unknown) {
     await session.abortTransaction();
     return handleError(error, 'api') as APIErrorResponse;

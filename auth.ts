@@ -6,10 +6,6 @@ import { IAccount } from './database/account.model';
 import { api } from './lib/api';
 import { ActionResponse } from './types/global';
 
-// We'll check if the sign-in account type is credentials; if yes, then we skip. we'll handle it the other way around when doing email password-based authentication.
-
-// But if the account type is not credentials, we'll check this new `signin-with-oauth` app and create oAuth accounts for the user.
-
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     GitHub({
@@ -23,7 +19,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   ],
   callbacks: {
     async session({ session, token }) {
-      session.userId = token.sub as string;
+      session.user.id = token.sub as string;
       return session;
     },
     async jwt({ token, account }) {
@@ -41,6 +37,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         if (userId) token.sub = userId.toString();
       }
+
       return token;
     },
     async signIn({ user, profile, account }) {
@@ -49,18 +46,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
       const userInfo = {
         name: user.name!,
+        email: user.email!,
+        image: user.image!,
         username:
           account.provider === 'github'
             ? (profile?.login as string)
             : (user.name?.toLowerCase() as string),
-        email: user.email!,
-        image: user.image!,
       };
 
       const { success } = (await api.auth.oAuthSignIn({
         user: userInfo,
         provider: account.provider as 'github' | 'google',
-        providerAccountId: account.providerAccountId as string,
+        providerAccountId: account.providerAccountId,
       })) as ActionResponse;
 
       if (!success) return false;
