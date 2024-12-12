@@ -1,12 +1,10 @@
 import Link from 'next/link';
 
+import { auth } from '@/auth';
 import QuestionCard from '@/components/cards/QuestionCard';
 import HomeFilter from '@/components/filters/HomeFilter';
 import LocalSearch from '@/components/search/LocalSearch';
 import { Button } from '@/components/ui/button';
-import { api } from '@/lib/api';
-import handleError from '@/lib/handlers/error';
-import { APIErrorResponse } from '@/types/global';
 
 import ROUTES from '../constants/routes';
 
@@ -223,21 +221,13 @@ const questions = [
   },
 ];
 
-const test = async () => {
-  try {
-    return await api.users.getAll();
-  } catch (error) {
-    return handleError(error, 'api') as APIErrorResponse;
-  }
-};
-
 interface LocalSearchParams {
   searchParams: Promise<{ [key: string]: string }>;
 }
 
 const Home = async ({ searchParams }: LocalSearchParams) => {
-  const users = await test();
-  console.log(`users`, users);
+  const session = await auth();
+  console.log(`session`, session);
 
   const { query = '', filter = '' } = await searchParams;
 
