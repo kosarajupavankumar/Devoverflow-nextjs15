@@ -37,16 +37,23 @@ export async function fetchHandler<T>(
     signal: controller.signal,
   };
 
+  logger.info(`Request URL: ${url}`);
+  logger.info(`Request options: ${JSON.stringify(config)}`);
+
   try {
     const response = await fetch(url, config);
 
     clearTimeout(id);
 
+    logger.info(`Response status: ${response.status}`);
+    const responseBody = await response.json();
+    logger.info(`Response body: ${JSON.stringify(responseBody)}`);
+
     if (!response.ok) {
       throw new RequestError(response.status, `HTTP error: ${response.status}`);
     }
 
-    return await response.json();
+    return responseBody;
   } catch (err) {
     const error = isError(err) ? err : new Error('Unknown error');
 

@@ -11,7 +11,10 @@ import { SignInWithOAuthSchema } from '@/lib/validation';
 import { APIErrorResponse } from '@/types/global';
 
 export async function POST(request: Request) {
+  
   const { provider, providerAccountId, user } = await request.json();
+
+  console.log('Request body:', { provider, providerAccountId, user });
 
   await dbConnect();
 
@@ -25,6 +28,8 @@ export async function POST(request: Request) {
       user,
     });
 
+    console.log('Validation result:', validatedData);
+
     if (!validatedData.success)
       throw new ValidationError(validatedData.error.flatten().fieldErrors);
 
@@ -37,6 +42,8 @@ export async function POST(request: Request) {
     });
 
     let existingUser = await User.findOne({ email }).session(session);
+
+    console.log('User object before create/update:', existingUser);
 
     if (!existingUser) {
       [existingUser] = await User.create(
@@ -63,6 +70,8 @@ export async function POST(request: Request) {
       providerAccountId,
     }).session(session);
 
+    console.log('Account object before create:', existingAccount);
+
     if (!existingAccount) {
       await Account.create(
         [
@@ -80,7 +89,10 @@ export async function POST(request: Request) {
 
     await session.commitTransaction();
 
-    return NextResponse.json({ success: true });
+    const response = { success: true };
+    console.log('Response before returning:', response);
+
+    return NextResponse.json(response);
   } catch (error: unknown) {
     await session.abortTransaction();
     return handleError(error, 'api') as APIErrorResponse;
