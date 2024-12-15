@@ -41,7 +41,7 @@ export class ValidationError extends RequestError {
 
 export class NotFoundError extends RequestError {
   constructor(resource: string) {
-    super(404, `${resource} not found`);
+    super(404, `${resource}`);
     this.name = 'NotFoundError';
   }
 }
