@@ -11,7 +11,6 @@ import { SignInWithOAuthSchema } from '@/lib/validation';
 import { APIErrorResponse } from '@/types/global';
 
 export async function POST(request: Request) {
-  
   const { provider, providerAccountId, user } = await request.json();
 
   console.log('Request body:', { provider, providerAccountId, user });
