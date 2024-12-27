@@ -5,7 +5,11 @@ import mongoose from 'mongoose';
 import Question from '@/database/question.model';
 import TagQuestion from '@/database/tag-question.model';
 import Tag from '@/database/tag.model';
-import { ActionResponse, ErrorResponse } from '@/types/global';
+import {
+  ActionResponse,
+  ErrorResponse,
+  Question as QuestionType,
+} from '@/types/global';
 
 import action from '../handlers/action';
 import handleError from '../handlers/error';
@@ -13,7 +17,7 @@ import { AskQuestionSchema } from '../validation';
 
 export async function createQuestion(
   params: CreateQuestionParams,
-): Promise<ActionResponse> {
+): Promise<ActionResponse<QuestionType>> {
   const validationResult = await action({
     params,
     schema: AskQuestionSchema,
@@ -43,12 +47,9 @@ export async function createQuestion(
     }
 
     const tagIds: mongoose.Types.ObjectId[] = [];
-    const tagQuestionDocuments: {
-      tag: mongoose.Types.ObjectId;
-      question: mongoose.Types.ObjectId;
-    }[] = [];
+    const tagQuestionDocuments = [];
 
-    tags.map(async (tag) => {
+    for (const tag of tags) {
       const existingTag = await Tag.findOneAndUpdate(
         { name: { $regex: new RegExp(`^${tag}$`, 'i') } },
         { $setOnInsert: { name: tag }, $inc: { questions: 1 } },
@@ -56,12 +57,11 @@ export async function createQuestion(
       );
 
       tagIds.push(existingTag._id);
-
       tagQuestionDocuments.push({
         tag: existingTag._id,
         question: question._id,
       });
-    });
+    }
 
     await TagQuestion.insertMany(tagQuestionDocuments, { session });
 
